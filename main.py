@@ -23,6 +23,9 @@ class Object:
         
         self.start_x = x
         self.start_y = y
+        self.start_image = image
+        
+        self.render = (self.x, self.y)
         
         if image != 0:
             self.image = pygame.transform.scale(image, (self.width, self.height))
@@ -40,6 +43,19 @@ scale = 1
 earth = Object(WN_SIZE[0] / 2, WN_SIZE[1] / 2, 230, 230, 5.972 * 10e24, (0, 0, 255), pygame.image.load('Earth.png'))
 iss = Object(earth.center[0] - (pixel_meter / 420000), earth.center[1] - (pixel_meter / 420000), scale * 40, scale * 40, 450 * 1000, (100, 100, 100), pygame.image.load('Satelite.png'))
 
+def updateScale():
+    earth.width = 230 * round(scale, 1)
+    earth.height = 230 * round(scale, 1)
+    earth.center = (earth.x - earth.width / 2, earth.y - earth.height / 2)
+    earth.image = pygame.transform.scale(earth.start_image, (earth.width, earth.height))
+    
+    iss.width = 40 * round(scale, 1)
+    iss.height = 40 * round(scale, 1)
+    iss.center = (iss.x - iss.width / 2, iss.y - iss.height / 2)
+    iss.image = pygame.transform.scale(iss.start_image, (iss.width, iss.height))
+    iss.render = (iss.x * scale, iss.y * scale)
+    iss.center = iss.x - iss.width / 2, iss.y - iss.height / 2
+
 # calc_gravity(earth, iss)
 
 run = True
@@ -53,17 +69,10 @@ while run:
     
     keys = pygame.key.get_pressed()
     if keys[pygame.K_PLUS]:
-        scale += 0.1
-        earth.width = 230 * scale
-        earth.heigth = 230 * scale
-        earth.center = (earth.x - earth.width / 2, earth.y - earth.height / 2)
-        earth.image = pygame.transform.scale(earth.image, (earth.width, earth.height))
-        print(scale , earth.height)
+        scale += 0.04
     if keys[pygame.K_MINUS]:
-        scale -= 0.1
-        earth.width = 230 * scale
-        earth.heigth = 230 * scale
-        earth.image = pygame.transform.scale(earth.image, (earth.width, earth.height))
+        scale -= 0.04
+    updateScale()
             
     wn.fill((0, 0, 0))
     wn.blit(earth.image, earth.center)
