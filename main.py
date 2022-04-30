@@ -46,9 +46,6 @@ dest = 0
 earth = Object(WN_SIZE[0] / 2, WN_SIZE[1] / 2, 150, 150, 5.972 * 10e24, (0, 0, 255), pygame.image.load('Earth.png'))
 iss = Object(earth.center[0] - (pixel_meter / 420000), earth.center[1] - (pixel_meter / 420000), 25, 25, 450 * 1000, (100, 100, 100), pygame.image.load('Satelite.png'))
 
-def updateScale():
-    pass
-# calc_gravity(earth, iss)
 
 run = True
 while run:
