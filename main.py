@@ -3,13 +3,15 @@ import math
 
 
 WN_SIZE = (900, 900)
-wn = pygame.display.set_mode(WN_SIZE)
+WINDOW = pygame.display.set_mode(WN_SIZE)
+
+wn = pygame.Surface(WN_SIZE)
 
 FPS = 90
 clock = pygame.time.Clock()
 
-pixel_meter = 12742000 / 230 # 230 pixels = earth width
-pixel_meter = pixel_meter / 230
+pixel_meter = 12742000 / 150 # 150 pixels = earth width
+pixel_meter = pixel_meter / 150
 
 class Object:
     def __init__(self, x, y, height, width, mass, color, image = 0):
@@ -38,24 +40,14 @@ def calc_gravity(o1, o2):
     F = ((6.67428 * 10e-11) * o1.mass * o2.mass) / (r * r)
     print(F)
     
-scale = 1
+scale = 1000
+dest = 0
 
-earth = Object(WN_SIZE[0] / 2, WN_SIZE[1] / 2, 230, 230, 5.972 * 10e24, (0, 0, 255), pygame.image.load('Earth.png'))
-iss = Object(earth.center[0] - (pixel_meter / 420000), earth.center[1] - (pixel_meter / 420000), scale * 40, scale * 40, 450 * 1000, (100, 100, 100), pygame.image.load('Satelite.png'))
+earth = Object(WN_SIZE[0] / 2, WN_SIZE[1] / 2, 150, 150, 5.972 * 10e24, (0, 0, 255), pygame.image.load('Earth.png'))
+iss = Object(earth.center[0] - (pixel_meter / 420000), earth.center[1] - (pixel_meter / 420000), 25, 25, 450 * 1000, (100, 100, 100), pygame.image.load('Satelite.png'))
 
 def updateScale():
-    earth.width = 230 * round(scale, 1)
-    earth.height = 230 * round(scale, 1)
-    earth.center = (earth.x - earth.width / 2, earth.y - earth.height / 2)
-    earth.image = pygame.transform.scale(earth.start_image, (earth.width, earth.height))
-    
-    iss.width = 40 * round(scale, 1)
-    iss.height = 40 * round(scale, 1)
-    iss.center = (iss.x - iss.width / 2, iss.y - iss.height / 2)
-    iss.image = pygame.transform.scale(iss.start_image, (iss.width, iss.height))
-    iss.render = (iss.x * scale, iss.y * scale)
-    iss.center = iss.x - iss.width / 2, iss.y - iss.height / 2
-
+    pass
 # calc_gravity(earth, iss)
 
 run = True
@@ -69,13 +61,18 @@ while run:
     
     keys = pygame.key.get_pressed()
     if keys[pygame.K_PLUS]:
-        scale += 0.04
-    if keys[pygame.K_MINUS]:
-        scale -= 0.04
+        scale += 10
+    if keys[pygame.K_MINUS] and scale > 920:
+        scale -= 10
     updateScale()
             
     wn.fill((0, 0, 0))
     wn.blit(earth.image, earth.center)
     wn.blit(iss.image, iss.center)
+    
+    if scale > 900:
+        dest = 0 - ((scale - 900) / 2)
+        
+    WINDOW.blit(pygame.transform.scale(wn, (scale, scale)), (dest, dest))
     
     pygame.display.update()
