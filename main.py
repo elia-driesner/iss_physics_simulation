@@ -35,10 +35,11 @@ class Object:
             self.img_x = self.x
             self.img_y = self.y
             
-def calc_gravity(o1, o2):
-    r = ((o1.center[0] + o2.center[0]) - (o1.center[1] + o2.center[1])) * pixel_meter
-    F = ((6.67428 * 10e-11) * o1.mass * o2.mass) / (r * r)
-    print(F)
+def calcGravity(earth, iss):
+    r = ((earth.center[0] + iss.center[0]) - (earth.center[1] + iss.center[1])) * pixel_meter
+    # F = float(((6.67428 * 10e-11) * earth.mass * iss.mass)) / float((r * r))
+    
+    print(f'Distance: {r}, F: {r}')
     
 scale = 1000
 dest = 0
@@ -46,6 +47,7 @@ dest = 0
 earth = Object(WN_SIZE[0] / 2, WN_SIZE[1] / 2, 150, 150, 5.972 * 10e24, (0, 0, 255), pygame.image.load('Earth.png'))
 iss = Object(earth.center[0] - (pixel_meter / 420000), earth.center[1] - (pixel_meter / 420000), 25, 25, 450 * 1000, (100, 100, 100), pygame.image.load('Satelite.png'))
 
+calcGravity(earth, iss)
 
 run = True
 while run:
@@ -61,7 +63,6 @@ while run:
         scale += 10
     if keys[pygame.K_MINUS] and scale > 920:
         scale -= 10
-    updateScale()
             
     wn.fill((0, 0, 0))
     wn.blit(earth.image, earth.center)
